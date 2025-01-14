@@ -1,0 +1,5 @@
+Host mycustomhost
+    HostName 192.168.1.100      # IP-адрес или доменное имя сервера
+    Port 2222                   # Порт SSH
+    User username               # Имя пользователя для подключения
+    IdentityFile ~/.ssh/id_rsa  # Путь к приватному SSH-ключу (если используется)
