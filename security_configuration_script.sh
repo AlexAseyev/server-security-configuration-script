@@ -118,15 +118,15 @@ configure_ssh() {
   read -p "Введите желаемый порт SSH (по умолчанию 2222): " NEW_PORT
   NEW_PORT=${NEW_PORT:-2222}  # Используем 2222, если пользователь не ввел ничего
 
-  # Путь к файлу конфигурации SSH
-  SSH_CONFIG="/etc/ssh/sshd_config"
+  # Проверка, что порт является числом и находится в допустимом диапазоне
+  if ! [[ "$NEW_PORT" =~ ^[0-9]+$ ]] || [ "$NEW_PORT" -lt 1 ] || [ "$NEW_PORT" -gt 65535 ]; then
+    echo "Ошибка: порт должен быть числом от 1 до 65535."
+    exit 1
+  fi
 
-  # Создаем резервную копию конфигурации SSH
-  backup_file "$SSH_CONFIG"
-
-  # Изменение порта SSH
-  sed -i "s/^#Port 22/Port $NEW_PORT/" $SSH_CONFIG
-  sed -i "s/^Port 22/Port $NEW_PORT/" $SSH_CONFIG
+  # Изменение порта SSH в конфигурации
+  sed -i "s/^#Port 22/Port $NEW_PORT/" /etc/ssh/sshd_config
+  sed -i "s/^Port .*/Port $NEW_PORT/" /etc/ssh/sshd_config
 
   # Запрет авторизации для root
   sed -i "s/^#PermitRootLogin yes/PermitRootLogin no/" $SSH_CONFIG
